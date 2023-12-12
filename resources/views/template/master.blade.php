@@ -141,7 +141,7 @@
           <ul class="menu-inner py-1">
             <!-- Dashboard -->
             <li class="menu-item">
-              <a href="{{route('pesanan.index')}}" class="menu-link">
+              <a href="/pesanan/" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-bell-ring"></i>
                 <div data-i18n="Analytics">Order</div>
               </a>
@@ -150,7 +150,7 @@
             <li class="menu-header small text-uppercase"><span class="menu-header-text">Report</span></li>
             <!-- Cards -->
             <li class="menu-item">
-              <a href="{{route('riwayat.index')}}" class="menu-link">
+              <a href="/riwayat/" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-history"></i>
                 <div data-i18n="Basic">History</div>
               </a>
@@ -160,7 +160,7 @@
             <li class="menu-header small text-uppercase"><span class="menu-header-text">Management</span></li>
             <!-- Menu -->
             <li class="menu-item">
-              <a href="{{route('menu.index')}}" class="menu-link">
+              <a href="/menu/" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-food-menu"></i>
                 <div data-i18n="Tables">Menu</div>
               </a>

@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('template/master');
 });
-
 Route::resource('menu', MenuController::class);
-Route::resource('pesanan', PesananController::class);
+Route::get('/pesanan' , [PesananController::class, 'index']);
+Route::post('/pesanan/update/{id}', [PesananController::class, 'update'])->name('pesanan');
 Route::resource('riwayat', RiwayatController::class);

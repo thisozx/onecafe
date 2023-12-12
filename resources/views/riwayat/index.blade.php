@@ -30,14 +30,16 @@
                         <tr>
                             <th>Pesanan No</th>
                             <th>Total</th>
+                            <th>Tanggal</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
                         @foreach($riwayat as $data)
                         <tr>
-                            <td>{{ $data->pesanan }}</td>
+                            <td>Pesanan Ke-{{ $data->pesanan }}</td>
                             <td>{{ $data->total}}</td>
+                            <td>{{ $data->created_at}}</td>
                             <td>
                                 <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('menu.destroy', $data->id) }}" method="POST">
                                     @csrf

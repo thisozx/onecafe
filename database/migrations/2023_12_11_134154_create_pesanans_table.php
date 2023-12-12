@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('menu');
             $table->integer('jumlah');
             $table->integer('total');
-            $table->string('status');
+            $table->integer('status'); // 0: masuk, 1: diproses, 2: selesai
             $table->timestamps();
         });
     }

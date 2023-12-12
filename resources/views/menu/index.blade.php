@@ -45,7 +45,7 @@
                             <td>{{ $data->deskripsi}}</td>
                             <td>{{ $data->harga}}</td>
                             <td>
-                                <img src="{{ Storage::url('menu/'.$data->foto) }}" style="width:150px">
+                                <img src="{{ Storage::url('/menu/'.$data->foto) }}" style="width:150px">
                             </td>
                             <td>
                                 <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('menu.destroy', $data->id) }}" method="POST">

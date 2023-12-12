@@ -27,6 +27,7 @@
                 <div class="card">
                     <h5 class="card-header">Pesanan Masuk</h5>
                     <div class="table-responsive text-nowrap">
+
                         <table class="table">
                             <thead>
                                 <tr>
@@ -38,39 +39,22 @@
                             </thead>
                             <tbody class="table-border-bottom-0">
                                 @foreach($pesanan as $data)
+                                @if($data->status == 0)
                                 <tr>
                                     <td>{{ $data->menu }}</td>
-                                    <td>{{ $data->jumlah}}</td>
-                                    <td>{{ $data->total}}</td>
-                                    <td><!-- Toggle Between Modals -->
-                                        <div class="col-lg-4 col-md-6">
-                                            <small class="text-light fw-semibold">Toggle Between Modals</small>
-                                            <div class="mt-3">
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalToggle">
-                                                    Launch modal
-                                                </button>
-
-                                                <!-- Modal 1-->
-                                                <div class="modal fade" id="modalToggle" aria-labelledby="modalToggleLabel" tabindex="-1" style="display: none" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="modalToggleLabel">Modal 1</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">Show a second modal and hide this one with the button below.</div>
-                                                            <div class="modal-footer">
-                                                                <button class="btn btn-primary" data-bs-target="#modalToggle2" data-bs-toggle="modal" data-bs-dismiss="modal">
-                                                                    Open second modal
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <td>{{ $data->jumlah }}</td>
+                                    <td>{{ $data->total }}</td>
+                                    <td>
+                                        <form action="/pesanan/update/{{ $data->id }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <button type="submit" class="btn btn-sm btn-{{ $data->status == 0 ? 'danger' : 'warning'}}">
+                                                {{ $data->status == 0 ? 'Masuk' : 'Diproses' }}
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
+                                @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -92,14 +76,25 @@
                             </thead>
                             <tbody class="table-border-bottom-0">
                                 @foreach($pesanan as $data)
+                                @if($data->status == 1)
                                 <tr>
                                     <td>{{ $data->menu }}</td>
-                                    <td>{{ $data->jumlah}}</td>
-                                    <td>{{ $data->total}}</td>
-                                    <td><a href="" type="submit" class="btn btn-outline-danger">{{ $data->status}}</a></td>
+                                    <td>{{ $data->jumlah }}</td>
+                                    <td>{{ $data->total }}</td>
+                                    <td>
+                                        <form action="/pesanan/update/{{ $data->id }}" method="post">
+                                            @csrf
+                                            @method('post')
+                                            <button type="submit" class="btn btn-sm btn-{{ $data->status == 0 ? 'danger' : 'warning'}}">
+                                                {{ $data->status == 0 ? 'Masuk' : 'Diproses' }}
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
+                                @endif
                                 @endforeach
                             </tbody>
+
                         </table>
                     </div>
                 </div>
@@ -124,6 +119,13 @@
 <!-- Main JS -->
 <script src="{{ url('assets/js/main.js') }}"></script>
 <!-- Page specific script -->
+<script>
+    function confirmUpdate(id) {
+        if (confirm("Yakin ubah data?")) {
+            window.location.href = "/pesanan/" + id;
+        }
+    }
+</script>
 <script>
     $(function() {
         $("#example1").DataTable({
