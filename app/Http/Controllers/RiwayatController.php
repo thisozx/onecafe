@@ -59,8 +59,14 @@ class RiwayatController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Riwayat $riwayat)
+    public function destroy($id)
     {
-        //
+        $riwayat = Riwayat::findOrFail($id);
+        $riwayat->delete();
+        if ($riwayat) {
+            return redirect()->route('riwayat.index')->with(['success' => 'Data Berhasil Dihapus!']);
+        } else {
+            return redirect()->route('riwayat.index')->with(['error' => 'Data Gagal Dihapus!']);
+        }
     }
 }

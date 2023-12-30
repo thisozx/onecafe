@@ -25,12 +25,12 @@ Route::get('/', function () {
 });
 Route::resource('menu', MenuController::class);
 Route::resource('cust', CustController::class);
-Route::get('/pesanan' , [PesananController::class, 'index']);
-Route::get('/user' , [UserController::class, 'index']);
+Route::get('/pesanan', [PesananController::class, 'index']);
+Route::get('/user', [UserController::class, 'index']);
 Route::post('/pesanan/update/{id}', [PesananController::class, 'update'])->name('pesanan');
 Route::post('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user');
+Route::post('/riwayat/destroy/{id}', [RiwayatController::class, 'destroy'])->name('riwayat');
 Route::resource('riwayat', RiwayatController::class);
-
 
 Auth::routes();
 

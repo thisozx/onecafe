@@ -31,6 +31,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <th>Pesanan</th>
                                     <th>Menu</th>
                                     <th>Jumlah</th>
                                     <th>Total</th>
@@ -41,6 +42,7 @@
                                 @foreach($pesanan as $data)
                                 @if($data->status == 0)
                                 <tr>
+                                    <td>Pesanan ke-{{ $data->id }}</td>
                                     <td>{{ $data->menu }}</td>
                                     <td>{{ $data->jumlah }}</td>
                                     <td>{{ $data->total }}</td>
@@ -68,6 +70,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <th>Pesanan</th>
                                     <th>Menu</th>
                                     <th>Jumlah</th>
                                     <th>Total</th>
@@ -78,6 +81,7 @@
                                 @foreach($pesanan as $data)
                                 @if($data->status == 1)
                                 <tr>
+                                    <td>Pesanan ke-{{ $data->id }}</td>
                                     <td>{{ $data->menu }}</td>
                                     <td>{{ $data->jumlah }}</td>
                                     <td>{{ $data->total }}</td>

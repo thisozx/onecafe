@@ -30,6 +30,9 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ url('customer/css/bootstrap.min.css') }}" rel="stylesheet">
 
+    {{-- SweetAlert Stylesheet --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+
     <!-- Template Stylesheet -->
     <link href="{{ url('customer/css/style.css') }}" rel="stylesheet">
     @yield('css')
@@ -61,11 +64,12 @@
                 <div class="navbar-nav ms-0 py-0 pe-0">
                     <!-- Menampilkan icon pesanan hanya di tampilan seluler -->
                     <div class="p-0">
-                        <a href="" class="btn btn-primary btn-sm d-lg-none py-2 px-3 ms-4"><i
-                                class="fa fa-shopping-cart"></i></a>
+                        <a href="" class="btn btn-primary btn-sm d-lg-none py-2 px-3 ms-4" data-bs-toggle="modal"
+                            data-bs-target="#pesananModal"><i class="fa fa-shopping-cart"></i></a>
                     </div>
                     <!-- Menampilkan tombol pesanan di tampilan web biasa -->
-                    <a href="" class="btn btn-primary py-2 px-4 d-none d-lg-inline">Pesanan Saya</a>
+                    <a href="" class="btn btn-primary py-2 px-4 d-none d-lg-inline" data-bs-toggle="modal"
+                        data-bs-target="#pesananModal">Pesanan Saya</a>
                 </div>
             </nav>
 
@@ -113,9 +117,41 @@
     <script src="{{ url('customer/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
     <script src="{{ url('customer/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 
+    <!-- JavaScript SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
     <!-- Template Javascript -->
     <script src="{{ url('customer/js/main.js') }}"></script>
     @yield('js')
+
+    <!-- Modal -->
+    <div class="modal fade" id="pesananModal" tabindex="-1" aria-labelledby="pesananModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pesananModalLabel">Pesanan Saya</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nama Item</th>
+                                <th scope="col">Harga</th>
+                                <th scope="col">Jumlah</th>
+                                <th scope="col">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pesananItemsTable"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Pesan Sekarang</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>

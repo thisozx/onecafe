@@ -68,27 +68,16 @@ class MenuController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $menu = Menu::findOrFail($id);
-        if ($request->file('foto') == "") {
-            $menu->update([
-                'nama' => $request->nama,
-                'kategori' => $request->kategori,
-                'deskripsi' => $request->deskripsi,
-                'harga' => $request->harga,
-            ]);
-        } else {
-            Storage::disk('local')->delete('public/menu/' . $menu->foto);
-            $menu->delete();
-            $foto = $request->file('foto');
-            $foto->storeAs('public/menu', $foto->hashName());
-            $menu = Menu::create([
-                'nama' => $request->nama,
-                'kategori' => $request->kategori,
-                'deskripsi' => $request->deskripsi,
-                'harga' => $request->harga,
-                'foto' => $foto->hashName(),
-            ]);
-        }
+        $foto = $request->file('foto');
+        $foto->storeAs('public/menu', $foto->hashName());
+        $menu = Menu::find($id);
+        $menu->update([
+            'nama' => $request->nama,
+            'kategori' => $request->kategori,
+            'deskripsi' => $request->deskripsi,
+            'harga' => $request->harga,
+            'foto' => $foto->hashName(),
+        ]);
         if ($menu) {
             return redirect()->route('menu.index')->with(['success' => 'Data Berhasil Diubah!']);
         } else {

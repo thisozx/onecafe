@@ -191,7 +191,7 @@
             </div>
 
             <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-              <!-- Search -->
+              {{-- <!-- Search -->
               <div class="navbar-nav align-items-center">
                 <div class="nav-item d-flex align-items-center">
                   <i class="bx bx-search fs-4 lh-0"></i>
@@ -203,15 +203,21 @@
                   />
                 </div>
               </div>
-              <!-- /Search -->
+              <!-- /Search --> --}}
 
               <ul class="navbar-nav flex-row align-items-center ms-auto">
                 <li class="nav-item">
-                    <span class="nav-link">
+                    <span class="nav-link fw-bold">
+                        <i class="menu-icon tf-icons bx bx-user"></i>
                         {{ Auth::user()->name }}
                     </span>
                 </li>
                 <li class="nav-item">
+                    <span class="nav-link fw-bold">
+                       |
+                    </span>
+                </li>
+                <li class="nav-item fw-bold">
                     <a class="nav-link" href="{{ route('logout') }}"
                         onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">

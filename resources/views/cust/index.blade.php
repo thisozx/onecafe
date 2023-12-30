@@ -62,7 +62,8 @@
                                                 <span class="text-primary fw-bold">Rp{{ $data->harga }}</span>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <button class="btn btn-primary btn-sm">Add</button>
+                                                <button class="btn btn-primary btn-sm"
+                                                    onclick="tambahKePesanan({{ $data->id }}, '{{ $data->nama }}', {{ $data->harga }})">Tambah</button>
                                             </div>
                                         </div>
                                     </div>
@@ -86,7 +87,8 @@
                                                 <span class="text-primary fw-bold">Rp{{ $data->harga }}</span>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <button class="btn btn-primary btn-sm">Add</button>
+                                                <button class="btn btn-primary btn-sm"
+                                                    onclick="tambahKePesanan({{ $data->id }}, '{{ $data->nama }}', {{ $data->harga }})">Tambah</button>
                                             </div>
                                         </div>
                                     </div>
@@ -110,7 +112,8 @@
                                                 <span class="text-primary fw-bold">Rp{{ $data->harga }}</span>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <button class="btn btn-primary btn-sm">Add</button>
+                                                <button class="btn btn-primary btn-sm"
+                                                    onclick="tambahKePesanan({{ $data->id }}, '{{ $data->nama }}', {{ $data->harga }})">Tambah</button>
                                             </div>
                                         </div>
                                     </div>
@@ -125,4 +128,123 @@
     <!-- Menu End -->
 @endsection
 @section('js')
+    <script>
+        // ...
+
+        function tambahKePesanan(idItem, namaItem, hargaItem) {
+            try {
+                // Lakukan logika penambahan item ke pesanan di sini
+                console.log(`Item ditambahkan ke pesanan: ${namaItem} - Rp${hargaItem}`);
+
+                // Contoh: Simpan item ke localStorage
+                // Anda dapat mengganti ini dengan logika penyimpanan data yang sesuai
+                let pesananItems = localStorage.getItem('pesananItems');
+                pesananItems = pesananItems ? JSON.parse(pesananItems) : [];
+
+                // Cek apakah item sudah ada di pesanan
+                const itemIndex = pesananItems.findIndex(item => item.id === idItem);
+
+                if (itemIndex !== -1) {
+                    // Jika item sudah ada, tambahkan jumlahnya
+                    pesananItems[itemIndex].jumlah += 1;
+                } else {
+                    // Jika item belum ada, tambahkan item baru
+                    const itemBaru = {
+                        id: idItem,
+                        nama: namaItem,
+                        harga: hargaItem,
+                        jumlah: 1
+                    };
+                    pesananItems.push(itemBaru);
+                }
+
+                localStorage.setItem('pesananItems', JSON.stringify(pesananItems));
+                tampilkanPesanan();
+
+                // Tampilkan notifikasi menggunakan SweetAlert
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Pesanan Ditambahkan',
+                    text: `${namaItem} telah ditambahkan ke pesanan!`,
+                });
+            } catch (error) {
+                console.error('Terjadi kesalahan saat menambahkan item ke pesanan:', error);
+            }
+        }
+
+        function hapusDariPesanan(idItem) {
+            try {
+                // Lakukan logika penghapusan item dari pesanan di sini
+                console.log(`Item dihapus dari pesanan dengan ID: ${idItem}`);
+
+                // Contoh: Hapus item dari localStorage
+                // Anda dapat mengganti ini dengan logika penghapusan yang sesuai
+                let pesananItems = localStorage.getItem('pesananItems');
+                pesananItems = pesananItems ? JSON.parse(pesananItems) : [];
+
+                // Temukan item dengan ID yang sesuai
+                const itemIndex = pesananItems.findIndex(item => item.id === idItem);
+
+                if (itemIndex !== -1) {
+                    // Kurangi jumlah item, hapus jika jumlahnya 0
+                    pesananItems[itemIndex].jumlah -= 1;
+
+                    if (pesananItems[itemIndex].jumlah === 0) {
+                        // Jika jumlah mencapai 0, hapus item dari pesanan
+                        pesananItems.splice(itemIndex, 1);
+                    }
+                }
+
+                localStorage.setItem('pesananItems', JSON.stringify(pesananItems));
+                tampilkanPesanan();
+            } catch (error) {
+                console.error('Terjadi kesalahan saat menghapus item dari pesanan:', error);
+            }
+        }
+
+        function tampilkanPesanan() {
+            try {
+                const pesananItemsTable = document.getElementById('pesananItemsTable');
+                pesananItemsTable.innerHTML = '';
+
+                const pesananItems = localStorage.getItem('pesananItems');
+
+                if (pesananItems) {
+                    const parsedPesananItems = JSON.parse(pesananItems);
+                    parsedPesananItems.forEach(item => {
+                        const tableRow = document.createElement('tr');
+
+                        const namaItemCell = document.createElement('td');
+                        namaItemCell.textContent = item.nama;
+                        tableRow.appendChild(namaItemCell);
+
+                        const hargaItemCell = document.createElement('td');
+                        hargaItemCell.textContent = `Rp${item.harga}`;
+                        tableRow.appendChild(hargaItemCell);
+
+                        const jumlahItemCell = document.createElement('td');
+                        jumlahItemCell.textContent = item.jumlah;
+                        tableRow.appendChild(jumlahItemCell);
+
+                        const aksiCell = document.createElement('td');
+                        const deleteButton = document.createElement('button');
+                        deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
+                        deleteButton.className = 'btn btn-danger btn-sm';
+                        deleteButton.onclick = function() {
+                            hapusDariPesanan(item.id);
+                        };
+                        aksiCell.appendChild(deleteButton);
+
+                        tableRow.appendChild(aksiCell);
+
+                        pesananItemsTable.appendChild(tableRow);
+                    });
+                }
+            } catch (error) {
+                console.error('Terjadi kesalahan saat menampilkan pesanan:', error);
+            }
+        }
+
+        // ...
+    </script>
 @endsection
