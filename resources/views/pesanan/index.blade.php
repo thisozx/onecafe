@@ -48,7 +48,7 @@
                                         <form action="/pesanan/update/{{ $data->id }}" method="post">
                                             @csrf
                                             @method('post')
-                                            <button type="submit" class="btn btn-sm btn-{{ $data->status == 0 ? 'danger' : 'warning'}}">
+                                            <button type="submit" class="btn btn-sm btn-outline-{{ $data->status == 0 ? 'danger' : 'warning'}}">
                                                 {{ $data->status == 0 ? 'Masuk' : 'Diproses' }}
                                             </button>
                                         </form>
@@ -85,7 +85,7 @@
                                         <form action="/pesanan/update/{{ $data->id }}" method="post">
                                             @csrf
                                             @method('post')
-                                            <button type="submit" class="btn btn-sm btn-{{ $data->status == 0 ? 'danger' : 'warning'}}">
+                                            <button type="submit" class="btn btn-sm btn-outline-{{ $data->status == 0 ? 'danger' : 'warning'}}">
                                                 {{ $data->status == 0 ? 'Masuk' : 'Diproses' }}
                                             </button>
                                         </form>

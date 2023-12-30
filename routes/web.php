@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\CustController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PesananController;
 use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\SessionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,9 +21,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('template/master');
+    return view('auth/login');
 });
 Route::resource('menu', MenuController::class);
+Route::resource('cust', CustController::class);
 Route::get('/pesanan' , [PesananController::class, 'index']);
+Route::get('/user' , [UserController::class, 'index']);
 Route::post('/pesanan/update/{id}', [PesananController::class, 'update'])->name('pesanan');
+Route::post('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user');
 Route::resource('riwayat', RiwayatController::class);
+
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

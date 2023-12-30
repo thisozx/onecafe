@@ -34,6 +34,7 @@ class MenuController extends Controller
         $foto->storeAs('public/menu', $foto->hashName());
         $menu = Menu::create([
             'nama' => $request->nama,
+            'kategori' => $request->kategori,
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'foto' => $foto->hashName(),
@@ -71,15 +72,18 @@ class MenuController extends Controller
         if ($request->file('foto') == "") {
             $menu->update([
                 'nama' => $request->nama,
+                'kategori' => $request->kategori,
                 'deskripsi' => $request->deskripsi,
                 'harga' => $request->harga,
             ]);
         } else {
             Storage::disk('local')->delete('public/menu/' . $menu->foto);
+            $menu->delete();
             $foto = $request->file('foto');
             $foto->storeAs('public/menu', $foto->hashName());
             $menu = Menu::create([
                 'nama' => $request->nama,
+                'kategori' => $request->kategori,
                 'deskripsi' => $request->deskripsi,
                 'harga' => $request->harga,
                 'foto' => $foto->hashName(),

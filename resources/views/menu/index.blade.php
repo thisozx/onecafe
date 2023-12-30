@@ -26,7 +26,7 @@
             <a href="{{ route('menu.create') }}"><button type="submit" class="btn btn-primary"><i class="bx bx-plus"></i> Tambah</button></a>
         </div>
         <div class="card">
-            <h5 class="card-header">Table Basic</h5>
+            <h5 class="card-header"></h5>
             <div class="table-responsive text-nowrap">
                 <table class="table">
                     <thead>
