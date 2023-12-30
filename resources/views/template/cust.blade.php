@@ -58,10 +58,10 @@
                     <!-- Menampilkan item menu di tampilan web biasa -->
                     <a href="" class="nav-item nav-link active">Menu </a>
                 </div>
-                <div class="navbar-nav ms-auto py-0 pe-4">
+                <div class="navbar-nav ms-0 py-0 pe-0">
                     <!-- Menampilkan icon pesanan hanya di tampilan seluler -->
                     <div class="p-0">
-                        <a href="" class="btn btn-primary btn-sm d-lg-none py-2 px-3 m-0"><i
+                        <a href="" class="btn btn-primary btn-sm d-lg-none py-2 px-3 ms-4"><i
                                 class="fa fa-shopping-cart"></i></a>
                     </div>
                     <!-- Menampilkan tombol pesanan di tampilan web biasa -->

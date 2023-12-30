@@ -47,11 +47,11 @@
                 </ul>
                 <div class="tab-content">
                     <div id="tab-1" class="tab-pane fade show p-0 active">
-                        <div class="row g-4 menu-items" data-tab="all">
+                        <div class="row g-5 menu-items" data-tab="all">
                             <!-- Menampilkan semua menu -->
                             @foreach ($menu as $data)
                                 <div class="col-lg-3 col-md-6 col-sm-6">
-                                    <div class="d-flex flex-row align-items-center text-start justify-content-center">
+                                    <div class="d-flex align-items-center text-start ms-4">
                                         <img class="flex-shrink-1 img-fluid rounded"
                                             src="{{ Storage::url('/menu/' . $data->foto) }}" alt=""
                                             style="width: 100px; height: 100px;">
@@ -75,8 +75,8 @@
                             <!-- Menampilkan menu makanan -->
                             @foreach ($foods as $data)
                                 <div class="col-lg-3 col-md-6 col-sm-6">
-                                    <div class="d-flex flex-row align-items-center text-start justify-content-center">
-                                        <img class="flex-shrink-1 img-fluid rounded"
+                                    <div class="d-flex align-items-center text-start ms-4">
+                                        <img class="flex-shrink-0 img-fluid rounded"
                                             src="{{ Storage::url('/menu/' . $data->foto) }}" alt=""
                                             style="width: 100px; height: 100px;">
                                         <div class="ms-3">
@@ -99,7 +99,7 @@
                             <!-- Menampilkan menu minuman -->
                             @foreach ($drinks as $data)
                                 <div class="col-lg-3 col-md-6 col-sm-6">
-                                    <div class="d-flex flex-row align-items-center text-start justify-content-center">
+                                    <div class="d-flex align-items-center text-start ms-4">
                                         <img class="flex-shrink-1 img-fluid rounded"
                                             src="{{ Storage::url('/menu/' . $data->foto) }}" alt=""
                                             style="width: 100px; height: 100px;">
