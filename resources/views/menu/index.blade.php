@@ -44,15 +44,16 @@
                                         <img src="{{ Storage::url('/menu/' . $data->foto) }}" style="width:150px">
                                     </td>
                                     <td>
-                                        <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                            action="{{ route('menu.destroy', $data->id) }}" method="POST">
+                                        {{-- <form onsubmit="return confirm('Apakah Anda Yakin ?');"
+                                            action="{{ route('menu.destroy', $data->id) }}" method="POST"> --}}
                                             @csrf
-                                            @method('DELETE')
-                                            <a href="" type="submit" class="btn btn-outline-danger"><i
-                                                    class="bx bx-trash me-1"></i></a>
+                                            <a href="/menu/destroy/{{ $data->id }}" type="button"
+                                                class="btn btn-outline-danger btn-hapus" data-id="{{ $data->id }}">
+                                                <i class="bx bx-trash me-1"></i>
+                                            </a>
                                             <a href="{{ route('menu.edit', $data->id) }}"
                                                 class="btn btn-outline-warning"><i class="bx bx-edit-alt me-1"></i></a>
-                                        </form>
+                                        {{-- </form> --}}
                                         &nbsp;
                                     </td>
                                 </tr>

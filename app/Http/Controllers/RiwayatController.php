@@ -61,8 +61,9 @@ class RiwayatController extends Controller
      */
     public function destroy($id)
     {
-        $riwayat = Riwayat::findOrFail($id);
+        $riwayat = Riwayat::find($id);
         $riwayat->delete();
+
         if ($riwayat) {
             return redirect()->route('riwayat.index')->with(['success' => 'Data Berhasil Dihapus!']);
         } else {

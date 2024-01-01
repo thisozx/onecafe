@@ -9,7 +9,7 @@
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="{{ url('img/favicon.ico') }}" rel="icon">
+    <link href="{{ asset('assets/img/logo/LOGO.png') }}" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,7 +55,8 @@
         <div class="container-xxl position-relative p-0">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
                 <a href="" class="navbar-brand p-0">
-                    <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>One Cafe</h1>
+                    <img class="text-primary m-0 mt-2 mb-2" src="{{ asset('assets/img/logo/LOGO.png') }}" alt="Logo"
+                        width="100" />
                 </a>
                 <div class="navbar-nav ms-auto py-0 pe-4 d-none d-lg-flex">
                     <!-- Menampilkan item menu di tampilan web biasa -->
@@ -76,7 +77,7 @@
 
             <div class="container-xxl py-5 bg-dark hero-header mb-5">
                 <div class="container text-center my-3 pt-3 pb-3">
-                    <h1 class="display-3 text-white mb-2 animated slideInDown">Food Menu</h1>
+                    <h1 class="display-3 text-white mb-2 animated slideInDown">One Cafe</h1>
                 </div>
             </div>
         </div>
@@ -133,24 +134,33 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Nama Item</th>
-                                <th scope="col">Harga</th>
-                                <th scope="col">Jumlah</th>
-                                <th scope="col">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pesananItemsTable"></tbody>
-                    </table>
+                    @csrf
+                    <form id="formPesanan" action="/pesanan/store">
+                        <label class="text-primary fw-bold" for="noMeja">Nomor Meja:</label>
+                        <input class="form-control mb-2" type="text" id="meja" name="meja" required>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nama Item</th>
+                                    <th scope="col">Harga</th>
+                                    <th scope="col">Jumlah</th>
+                                    <th scope="col">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pesananItemsTable"></tbody>
+                        </table>
+                    </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Pesan Sekarang</button>
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <span id="totalPesanan" class="fw-bold">Total Pesanan: Rp0</span>
+                        <a href="/pesan" id="btnPesanSekarang" class="btn btn-primary">Pesan Sekarang</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 
 </body>
 

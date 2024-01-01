@@ -10,17 +10,16 @@
 
 @endsection
 @section('content')
-@if (session()->has('success'))
-<div class="alert alert-primary">
-    {{ session()->get('success') }}
-</div>
-@endif
 <div class="content-wrapper">
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Pesanan /</span> Daftar Pesanan</h4>
-
+        @if (session()->has('success'))
+        <div class="alert alert-primary">
+            {{ session()->get('success') }}
+        </div>
+        @endif
         <!-- Basic Bootstrap Table -->
         <div class="row">
             <div class="col-xl">
@@ -31,7 +30,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Pesanan</th>
+                                    <th>Meja</th>
                                     <th>Menu</th>
                                     <th>Jumlah</th>
                                     <th>Total</th>
@@ -42,7 +41,7 @@
                                 @foreach($pesanan as $data)
                                 @if($data->status == 0)
                                 <tr>
-                                    <td>Pesanan ke-{{ $data->id }}</td>
+                                    <td>Meja no-{{ $data->meja }}</td>
                                     <td>{{ $data->menu }}</td>
                                     <td>{{ $data->jumlah }}</td>
                                     <td>{{ $data->total }}</td>
@@ -70,7 +69,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Pesanan</th>
+                                    <th>Menu</th>
                                     <th>Menu</th>
                                     <th>Jumlah</th>
                                     <th>Total</th>
@@ -81,7 +80,7 @@
                                 @foreach($pesanan as $data)
                                 @if($data->status == 1)
                                 <tr>
-                                    <td>Pesanan ke-{{ $data->id }}</td>
+                                    <td>Meja no-{{ $data->meja }}</td>
                                     <td>{{ $data->menu }}</td>
                                     <td>{{ $data->jumlah }}</td>
                                     <td>{{ $data->total }}</td>

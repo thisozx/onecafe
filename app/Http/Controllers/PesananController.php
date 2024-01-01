@@ -30,7 +30,31 @@ class PesananController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Ambil data pesanan
+        $meja = $request['meja'];
+        $total = $request['total'];
+        $pesananItems = json_decode($request['pesanan_items'], true);
+
+        // Pecah items
+        foreach ($pesananItems as $item) {
+
+            $menu = $item['nama'];
+            $jumlah = $item['jumlah'];
+
+            // Simpan per item
+            $pesanan = new Pesanan;
+            $pesanan->meja = $meja;
+            $pesanan->menu = $menu;
+            $pesanan->jumlah = $jumlah;
+            $pesanan->total = $total;
+
+            $pesanan->save();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data pesanan berhasil disimpan'
+        ]);
     }
 
     /**

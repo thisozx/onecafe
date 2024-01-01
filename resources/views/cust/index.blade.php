@@ -11,7 +11,8 @@
     <div class="container-xxl py-5">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h5 class="section-title ff-secondary text-center text-primary fw-normal">Food Menu</h5>
+                <h5 class="section-title ff-secondary text-center text-primary fw-normal" style="color: #6ED04C">Food Menu
+                </h5>
                 <h1 class="mb-5">Daftar Menu</h1>
             </div>
             <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.1s">
@@ -159,7 +160,7 @@
                 }
 
                 localStorage.setItem('pesananItems', JSON.stringify(pesananItems));
-                tampilkanPesanan();
+                perbaruiPesananDanTotal();
 
                 // Tampilkan notifikasi menggunakan SweetAlert
                 Swal.fire({
@@ -177,7 +178,6 @@
                 // Lakukan logika penghapusan item dari pesanan di sini
                 console.log(`Item dihapus dari pesanan dengan ID: ${idItem}`);
 
-                // Contoh: Hapus item dari localStorage
                 // Anda dapat mengganti ini dengan logika penghapusan yang sesuai
                 let pesananItems = localStorage.getItem('pesananItems');
                 pesananItems = pesananItems ? JSON.parse(pesananItems) : [];
@@ -193,14 +193,59 @@
                         // Jika jumlah mencapai 0, hapus item dari pesanan
                         pesananItems.splice(itemIndex, 1);
                     }
-                }
 
-                localStorage.setItem('pesananItems', JSON.stringify(pesananItems));
-                tampilkanPesanan();
+                    // Tambahkan pembaruan total dan pesanan sebelum menampilkan pesanan
+                    const totalPesanan = kurangiTotalPesanan(pesananItems);
+                    // perbaruiPesananDanTotal(totalPesanan);
+                    perbaruiPesanan(totalPesanan);
+
+                    localStorage.setItem('pesananItems', JSON.stringify(pesananItems));
+                    tampilkanPesanan();
+                }
             } catch (error) {
                 console.error('Terjadi kesalahan saat menghapus item dari pesanan:', error);
             }
         }
+
+        // Fungsi untuk menghitung total pesanan
+        function hitungTotalPesanan(pesananItems) {
+            let total = 0;
+            pesananItems.forEach(item => {
+                total += item.harga * item.jumlah;
+            });
+            return total;
+        }
+
+        // Fungsi untuk memperbarui total di dalam modal
+        function perbaruiTotalPesananModal(total) {
+            const elemenTotalPesanan = document.getElementById('totalPesanan');
+            elemenTotalPesanan.textContent = `Total Pesanan: Rp${total}`;
+        }
+
+        // Fungsi untuk memperbarui total pesanan dan tampilan pesanan di modal
+        function perbaruiPesananDanTotal() {
+            const pesananItems = JSON.parse(localStorage.getItem('pesananItems')) || [];
+            const totalPesanan = hitungTotalPesanan(pesananItems);
+            perbaruiTotalPesananModal(totalPesanan);
+            tampilkanPesanan();
+        }
+
+        function perbaruiPesanan() {
+            const pesananItems = JSON.parse(localStorage.getItem('pesananItems')) || [];
+            const totalPesanan = kurangiTotalPesanan(pesananItems);
+            perbaruiTotalPesananModal(totalPesanan);
+            tampilkanPesanan();
+        }
+
+        // Fungsi untuk mengurangi total pesanan
+        function kurangiTotalPesanan(pesananItems) {
+            let total = 0;
+            pesananItems.forEach(item => {
+                total += item.harga * item.jumlah;
+            });
+            return total;
+        }
+
 
         function tampilkanPesanan() {
             try {
@@ -232,6 +277,7 @@
                         deleteButton.className = 'btn btn-danger btn-sm';
                         deleteButton.onclick = function() {
                             hapusDariPesanan(item.id);
+                            perbaruiTotalPesananModal(kurangiTotalPesanan(parsedPesananItems));
                         };
                         aksiCell.appendChild(deleteButton);
 
@@ -239,12 +285,65 @@
 
                         pesananItemsTable.appendChild(tableRow);
                     });
+
+                    // Perbarui total pesanan di modal
+                    perbaruiTotalPesananModal(hitungTotalPesanan(parsedPesananItems));
                 }
             } catch (error) {
                 console.error('Terjadi kesalahan saat menampilkan pesanan:', error);
             }
         }
 
+        const form = document.getElementById('formPesanan');
+
+        form.addEventListener('submit', function(event) {
+
+            event.preventDefault();
+
+            // Ambil data pesanan
+            const meja = document.getElementById('meja').value;
+            const pesananItems = JSON.parse(localStorage.getItem('pesananItems')) || [];
+
+            // Ambil total pesanan
+            const totalPesanan = document.getElementById('totalPesanan').textContent;
+            totalPesanan = totalPesanan.split('Total Pesanan: Rp')[1];
+
+            form.submit(); // submit form
+        });
+
+        const btnPesan = document.getElementById('btnPesanSekarang');
+
+        btnPesan.addEventListener('click', function() {
+            // Ambil data pesanan
+            const meja = document.getElementById('meja').value;
+            const pesananItems = JSON.parse(localStorage.getItem('pesananItems')) || [];
+
+            // Ambil total pesanan
+            const totalPesanan = document.getElementById('totalPesanan').textContent;
+            totalPesanan = totalPesanan.split('Total Pesanan: Rp')[1];
+        });
+
+        const dataPesanan = {
+            meja: meja,
+            pesanan_items: pesananItems,
+            total: totalPesanan
+        };
+
+        // Contoh menggunakan Fetch API
+        fetch('/pesan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataPesanan)
+            })
+            .then(response => {
+                // Pesanan berhasil disimpan
+                console.log('Data pesanan berhasil disimpan');
+            })
+            .catch(error => {
+                console.error('Gagal menyimpan data pesanan', error);
+            });
         // ...
     </script>
 @endsection

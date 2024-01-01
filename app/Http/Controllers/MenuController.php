@@ -90,7 +90,7 @@ class MenuController extends Controller
      */
     public function destroy($id)
     {
-        $menu = Menu::findOrFail($id);
+        $menu = Menu::find($id);
         Storage::disk('local')->delete('public/menu/' . $menu->foto);
         $menu->delete();
         if ($menu) {

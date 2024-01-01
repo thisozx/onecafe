@@ -7,15 +7,16 @@
 @endsection
 
 @section('content')
-    @if (session()->has('success'))
-        <div class="alert alert-primary">
-            {{ session()->get('success') }}
-        </div>
-    @endif
     <div class="content-wrapper">
         <!-- Content -->
         <div class="container-xxl flex-grow-1 container-p-y">
             <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Riwayat /</span> Daftar Riwayat</h4>
+
+            @if (session()->has('success'))
+                <div class="alert alert-primary">
+                    {{ session()->get('success') }}
+                </div>
+            @endif
 
             <!-- Basic Bootstrap Table -->
             <div class="card">
@@ -37,14 +38,13 @@
                                     <td>{{ $data->total }}</td>
                                     <td>{{ $data->created_at }}</td>
                                     <td>
-                                        <form action="{{ route('riwayat', $data->id) }}" method="POST" class="form-hapus">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn btn-outline-danger btn-hapus"
-                                                data-id="{{ $data->id }}">
-                                                <i class="bx bx-trash me-1"></i>
-                                            </button>
-                                        </form>
+                                        {{-- <form action="{{ route('riwayat', $data->id) }}" method="POST" class="form-hapus"> --}}
+                                        @csrf
+                                        <a href="/riwayat/destroy/{{ $data->id }}" type="button"
+                                            class="btn btn-outline-danger btn-hapus" data-id="{{ $data->id }}">
+                                            <i class="bx bx-trash me-1"></i>
+                                        </a>
+                                        {{-- </form> --}}
                                         &nbsp;
                                     </td>
                                 </tr>
