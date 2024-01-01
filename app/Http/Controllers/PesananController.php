@@ -30,32 +30,51 @@ class PesananController extends Controller
      */
     public function store(Request $request)
     {
-        // Ambil data pesanan
-        $meja = $request['meja'];
-        $total = $request['total'];
-        $pesananItems = json_decode($request['pesanan_items'], true);
+        // Validasi input jika diperlukan
+        $request->validate([
+            'meja' => 'required|integer',
+            'pesanan.*.id' => 'required|integer',
+            'pesanan.*.nama' => 'required|string',
+            'pesanan.*.jumlah' => 'required|integer|min:1',
+        ]);
+        // Hitung total pesanan
+        $totalPesanan = 0;
 
-        // Pecah items
-        foreach ($pesananItems as $item) {
-
-            $menu = $item['nama'];
-            $jumlah = $item['jumlah'];
-
-            // Simpan per item
-            $pesanan = new Pesanan;
-            $pesanan->meja = $meja;
-            $pesanan->menu = $menu;
-            $pesanan->jumlah = $jumlah;
-            $pesanan->total = $total;
-
-            $pesanan->save();
+        try {
+            foreach ($request->input('pesanan') as $pesananItem) {
+                $totalPesanan += $pesananItem['harga'] * $pesananItem['jumlah'];
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Terjadi kesalahan saat memproses data pesanan: ' . $e->getMessage()
+            ], 500);
         }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data pesanan berhasil disimpan'
-        ]);
+        // Proses penyimpanan pesanan dan total pesanan
+        $pesanan = new Pesanan;
+        $pesanan->meja = $request->input('meja');
+        $pesanan->total = $totalPesanan;
+        $pesanan->status = 0;
+
+        try {
+            foreach ($request->input('pesanan') as $pesananItem) {
+                $pesanan->create([
+                    'menu' => $pesananItem['nama'],
+                    'jumlah' => $pesananItem['jumlah'],
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Terjadi kesalahan saat memproses data pesanan: ' . $e->getMessage()
+            ], 500);
+        }
+
+        $pesanan->save();
+
+        // Respond dengan sesuatu, seperti pesan sukses atau data yang disimpan
+        return response()->json(['message' => 'Pesanan berhasil disimpan'], 200);
     }
+
 
     /**
      * Display the specified resource.

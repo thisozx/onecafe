@@ -127,223 +127,169 @@
         </div>
     </div>
     <!-- Menu End -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="pesananModal" tabindex="-1" aria-labelledby="pesananModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pesananModalLabel">Pesanan Saya</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formPesanan" action="\pesan">
+                    <div class="modal-body">
+                        @csrf
+                        <label class="text-primary fw-bold" for="noMeja">Nomor Meja:</label>
+                        <input class="form-control mb-2" type="text" id="meja" name="meja" required>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nama Item</th>
+                                    <th scope="col">Harga</th>
+                                    <th scope="col">Jumlah</th>
+                                    <th scope="col">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pesananItemsTable"></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <span id="totalPesanan" class="fw-bold">Total Pesanan: Rp0</span>
+                            <button id="btnPesanSekarang" class="btn btn-primary">Pesan Sekarang</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Tambah Pesanan -->
+    <div class="modal fade" id="modalTambahPesanan" tabindex="-1" aria-labelledby="modalTambahPesananLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTambahPesananLabel">Tambah Pesanan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="menuId">
+                    <h6 id="menuNama"></h6>
+                    <p id="menuHarga"></p>
+                    <label for="jumlahPesanan">Jumlah Pesanan:</label>
+                    <input type="number" class="form-control" id="jumlahPesanan" min="1" value="1">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnTambahPesanan">Tambah Pesanan</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('js')
     <script>
-        // ...
+        // Objek untuk menyimpan pesanan sementara
+        let pesanan = [];
 
-        function tambahKePesanan(idItem, namaItem, hargaItem) {
-            try {
-                // Lakukan logika penambahan item ke pesanan di sini
-                console.log(`Item ditambahkan ke pesanan: ${namaItem} - Rp${hargaItem}`);
+        function tambahKePesanan(id, nama, harga) {
+            // Tampilkan modal untuk memasukkan jumlah pesanan
+            $('#modalTambahPesanan').modal('show');
 
-                // Contoh: Simpan item ke localStorage
-                // Anda dapat mengganti ini dengan logika penyimpanan data yang sesuai
-                let pesananItems = localStorage.getItem('pesananItems');
-                pesananItems = pesananItems ? JSON.parse(pesananItems) : [];
+            // Set data menu yang dipilih
+            $('#modalTambahPesanan').find('#menuId').val(id);
+            $('#modalTambahPesanan').find('#menuNama').text(nama);
+            $('#modalTambahPesanan').find('#menuHarga').text(`Rp${harga}`);
 
-                // Cek apakah item sudah ada di pesanan
-                const itemIndex = pesananItems.findIndex(item => item.id === idItem);
+            // Fungsi yang akan dipanggil saat tombol "Tambah Pesanan" di modal ditekan
+            $('#modalTambahPesanan').find('#btnTambahPesanan').off('click').on('click', function() {
+                let jumlah = parseInt($('#modalTambahPesanan').find('#jumlahPesanan').val());
 
-                if (itemIndex !== -1) {
-                    // Jika item sudah ada, tambahkan jumlahnya
-                    pesananItems[itemIndex].jumlah += 1;
-                } else {
-                    // Jika item belum ada, tambahkan item baru
-                    const itemBaru = {
-                        id: idItem,
-                        nama: namaItem,
-                        harga: hargaItem,
-                        jumlah: 1
+                if (!isNaN(jumlah) && jumlah > 0) {
+                    // Tambahkan item ke pesanan sementara
+                    let item = {
+                        id: id,
+                        nama: nama,
+                        harga: harga,
+                        jumlah: jumlah
                     };
-                    pesananItems.push(itemBaru);
+                    pesanan.push(item);
+                    refreshTabelPesanan();
+                    // Sembunyikan modal setelah menambahkan pesanan
+                    $('#modalTambahPesanan').modal('hide');
+                } else {
+                    alert('Jumlah tidak valid.');
                 }
-
-                localStorage.setItem('pesananItems', JSON.stringify(pesananItems));
-                perbaruiPesananDanTotal();
-
-                // Tampilkan notifikasi menggunakan SweetAlert
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Pesanan Ditambahkan',
-                    text: `${namaItem} telah ditambahkan ke pesanan!`,
-                });
-            } catch (error) {
-                console.error('Terjadi kesalahan saat menambahkan item ke pesanan:', error);
-            }
-        }
-
-        function hapusDariPesanan(idItem) {
-            try {
-                // Lakukan logika penghapusan item dari pesanan di sini
-                console.log(`Item dihapus dari pesanan dengan ID: ${idItem}`);
-
-                // Anda dapat mengganti ini dengan logika penghapusan yang sesuai
-                let pesananItems = localStorage.getItem('pesananItems');
-                pesananItems = pesananItems ? JSON.parse(pesananItems) : [];
-
-                // Temukan item dengan ID yang sesuai
-                const itemIndex = pesananItems.findIndex(item => item.id === idItem);
-
-                if (itemIndex !== -1) {
-                    // Kurangi jumlah item, hapus jika jumlahnya 0
-                    pesananItems[itemIndex].jumlah -= 1;
-
-                    if (pesananItems[itemIndex].jumlah === 0) {
-                        // Jika jumlah mencapai 0, hapus item dari pesanan
-                        pesananItems.splice(itemIndex, 1);
-                    }
-
-                    // Tambahkan pembaruan total dan pesanan sebelum menampilkan pesanan
-                    const totalPesanan = kurangiTotalPesanan(pesananItems);
-                    // perbaruiPesananDanTotal(totalPesanan);
-                    perbaruiPesanan(totalPesanan);
-
-                    localStorage.setItem('pesananItems', JSON.stringify(pesananItems));
-                    tampilkanPesanan();
-                }
-            } catch (error) {
-                console.error('Terjadi kesalahan saat menghapus item dari pesanan:', error);
-            }
-        }
-
-        // Fungsi untuk menghitung total pesanan
-        function hitungTotalPesanan(pesananItems) {
-            let total = 0;
-            pesananItems.forEach(item => {
-                total += item.harga * item.jumlah;
             });
-            return total;
         }
 
-        // Fungsi untuk memperbarui total di dalam modal
-        function perbaruiTotalPesananModal(total) {
-            const elemenTotalPesanan = document.getElementById('totalPesanan');
-            elemenTotalPesanan.textContent = `Total Pesanan: Rp${total}`;
+        // Fungsi untuk menampilkan modal pesanan
+        function tampilkanModalPesanan() {
+            refreshTabelPesanan();
+            $('#pesananModal').modal('show');
         }
 
-        // Fungsi untuk memperbarui total pesanan dan tampilan pesanan di modal
-        function perbaruiPesananDanTotal() {
-            const pesananItems = JSON.parse(localStorage.getItem('pesananItems')) || [];
-            const totalPesanan = hitungTotalPesanan(pesananItems);
-            perbaruiTotalPesananModal(totalPesanan);
-            tampilkanPesanan();
-        }
+        function refreshTabelPesanan() {
+            // Perbarui tabel pesanan di modal
+            let tabelPesanan = document.getElementById('pesananItemsTable');
+            let totalPesanan = 0;
+            tabelPesanan.innerHTML = '';
 
-        function perbaruiPesanan() {
-            const pesananItems = JSON.parse(localStorage.getItem('pesananItems')) || [];
-            const totalPesanan = kurangiTotalPesanan(pesananItems);
-            perbaruiTotalPesananModal(totalPesanan);
-            tampilkanPesanan();
-        }
+            pesanan.forEach((item, index) => {
+                let subtotal = item.harga * item.jumlah;
+                totalPesanan += subtotal;
 
-        // Fungsi untuk mengurangi total pesanan
-        function kurangiTotalPesanan(pesananItems) {
-            let total = 0;
-            pesananItems.forEach(item => {
-                total += item.harga * item.jumlah;
+                let row = `
+                    <tr>
+                        <td>${item.nama}</td>
+                        <td>Rp${item.harga}</td>
+                        <td>${item.jumlah}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="hapusDariPesanan(${index})"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>`;
+                tabelPesanan.innerHTML += row;
             });
-            return total;
+
+            // Perbarui total pesanan
+            document.getElementById('totalPesanan').innerText = `Total Pesanan: Rp${totalPesanan}`;
         }
 
-
-        function tampilkanPesanan() {
-            try {
-                const pesananItemsTable = document.getElementById('pesananItemsTable');
-                pesananItemsTable.innerHTML = '';
-
-                const pesananItems = localStorage.getItem('pesananItems');
-
-                if (pesananItems) {
-                    const parsedPesananItems = JSON.parse(pesananItems);
-                    parsedPesananItems.forEach(item => {
-                        const tableRow = document.createElement('tr');
-
-                        const namaItemCell = document.createElement('td');
-                        namaItemCell.textContent = item.nama;
-                        tableRow.appendChild(namaItemCell);
-
-                        const hargaItemCell = document.createElement('td');
-                        hargaItemCell.textContent = `Rp${item.harga}`;
-                        tableRow.appendChild(hargaItemCell);
-
-                        const jumlahItemCell = document.createElement('td');
-                        jumlahItemCell.textContent = item.jumlah;
-                        tableRow.appendChild(jumlahItemCell);
-
-                        const aksiCell = document.createElement('td');
-                        const deleteButton = document.createElement('button');
-                        deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
-                        deleteButton.className = 'btn btn-danger btn-sm';
-                        deleteButton.onclick = function() {
-                            hapusDariPesanan(item.id);
-                            perbaruiTotalPesananModal(kurangiTotalPesanan(parsedPesananItems));
-                        };
-                        aksiCell.appendChild(deleteButton);
-
-                        tableRow.appendChild(aksiCell);
-
-                        pesananItemsTable.appendChild(tableRow);
-                    });
-
-                    // Perbarui total pesanan di modal
-                    perbaruiTotalPesananModal(hitungTotalPesanan(parsedPesananItems));
-                }
-            } catch (error) {
-                console.error('Terjadi kesalahan saat menampilkan pesanan:', error);
-            }
+        function hapusDariPesanan(index) {
+            // Hapus item dari pesanan sementara
+            pesanan.splice(index, 1);
+            refreshTabelPesanan();
         }
 
-        const form = document.getElementById('formPesanan');
-
-        form.addEventListener('submit', function(event) {
-
-            event.preventDefault();
-
-            // Ambil data pesanan
-            const meja = document.getElementById('meja').value;
-            const pesananItems = JSON.parse(localStorage.getItem('pesananItems')) || [];
-
-            // Ambil total pesanan
-            const totalPesanan = document.getElementById('totalPesanan').textContent;
-            totalPesanan = totalPesanan.split('Total Pesanan: Rp')[1];
-
-            form.submit(); // submit form
-        });
-
-        const btnPesan = document.getElementById('btnPesanSekarang');
-
-        btnPesan.addEventListener('click', function() {
-            // Ambil data pesanan
-            const meja = document.getElementById('meja').value;
-            const pesananItems = JSON.parse(localStorage.getItem('pesananItems')) || [];
-
-            // Ambil total pesanan
-            const totalPesanan = document.getElementById('totalPesanan').textContent;
-            totalPesanan = totalPesanan.split('Total Pesanan: Rp')[1];
-        });
-
-        const dataPesanan = {
-            meja: meja,
-            pesanan_items: pesananItems,
-            total: totalPesanan
-        };
-
-        // Contoh menggunakan Fetch API
-        fetch('/pesan', {
+        function pesanSekarang() {
+            // Kirim pesanan ke server atau lakukan tindakan sesuai kebutuhan
+            $.ajax({
+                url: '/pesan',
                 method: 'POST',
+                contentType: 'application/json',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                body: JSON.stringify(dataPesanan)
-            })
-            .then(response => {
-                // Pesanan berhasil disimpan
-                console.log('Data pesanan berhasil disimpan');
-            })
-            .catch(error => {
-                console.error('Gagal menyimpan data pesanan', error);
+                data: JSON.stringify({
+                    pesanan: pesanan
+                }),
+                success: function(response) {
+                    console.log('Pesanan berhasil dikirim ke server:', response);
+                    pesanan = [];
+                    refreshTabelPesanan();
+                },
+                error: function(error) {
+                    console.error('Gagal mengirim pesanan ke server:', error);
+                }
             });
-        // ...
+
+            // Setelah pesanan dikirim atau diproses, bersihkan pesanan
+            pesanan = [];
+            refreshTabelPesanan();
+        }
+        // Event listener untuk button pesan sekarang di modal
+        document.getElementById('btnPesanSekarang').addEventListener('click', pesanSekarang);
+
+        // Event listener untuk button pesanan di header
+        document.getElementById('btnPesananSaya').addEventListener('click', tampilkanModalPesanan);
     </script>
 @endsection

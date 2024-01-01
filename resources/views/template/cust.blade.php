@@ -35,6 +35,7 @@
 
     <!-- Template Stylesheet -->
     <link href="{{ url('customer/css/style.css') }}" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @yield('css')
 </head>
 
@@ -69,7 +70,7 @@
                             data-bs-target="#pesananModal"><i class="fa fa-shopping-cart"></i></a>
                     </div>
                     <!-- Menampilkan tombol pesanan di tampilan web biasa -->
-                    <a href="" class="btn btn-primary py-2 px-4 d-none d-lg-inline" data-bs-toggle="modal"
+                    <a href="" class="btn btn-primary py-2 px-4 d-none d-lg-inline" id="btnPesananSaya" data-bs-toggle="modal"
                         data-bs-target="#pesananModal">Pesanan Saya</a>
                 </div>
             </nav>
@@ -124,43 +125,6 @@
     <!-- Template Javascript -->
     <script src="{{ url('customer/js/main.js') }}"></script>
     @yield('js')
-
-    <!-- Modal -->
-    <div class="modal fade" id="pesananModal" tabindex="-1" aria-labelledby="pesananModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pesananModalLabel">Pesanan Saya</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    @csrf
-                    <form id="formPesanan" action="/pesanan/store">
-                        <label class="text-primary fw-bold" for="noMeja">Nomor Meja:</label>
-                        <input class="form-control mb-2" type="text" id="meja" name="meja" required>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Nama Item</th>
-                                    <th scope="col">Harga</th>
-                                    <th scope="col">Jumlah</th>
-                                    <th scope="col">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="pesananItemsTable"></tbody>
-                        </table>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <span id="totalPesanan" class="fw-bold">Total Pesanan: Rp0</span>
-                        <a href="/pesan" id="btnPesanSekarang" class="btn btn-primary">Pesan Sekarang</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
 </body>
 

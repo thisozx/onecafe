@@ -32,7 +32,7 @@ Route::post('/user/destroy/{id}', [UserController::class, 'destroy'])->name('use
 Route::get('/menu/destroy/{id}', [MenuController::class, 'destroy'])->name('menu');
 Route::get('/riwayat/destroy/{id}', [RiwayatController::class, 'destroy'])->name('riwayat');
 Route::resource('riwayat', RiwayatController::class);
-
+Route::post('/pesanan/store', [PesananController::class, 'store'])->name('pesanan');
 Route::get('/pesan', [PesananController::class, 'store']);
 
 Auth::routes();
