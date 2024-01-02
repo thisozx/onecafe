@@ -62,17 +62,21 @@
                     <!-- Menampilkan item menu di tampilan web biasa -->
                     <a href="" class="nav-item nav-link active">Menu </a>
                 </div>
+
+
                 <div class="navbar-nav ms-0 py-0 pe-0">
+                    
                     <!-- Menampilkan icon pesanan hanya di tampilan seluler -->
                     <div class="p-0">
                         <a href="" class="btn btn-primary btn-sm d-lg-none py-2 px-3 ms-4" data-bs-toggle="modal"
                             data-bs-target="#pesananModal"><i class="fa fa-shopping-cart"></i></a>
                     </div>
+                    <!-- Menambahkan jarak antara tombol -->
+                    <div style="width: 10px;"></div>
                     <!-- Menampilkan tombol pesanan di tampilan web biasa -->
-
-                        <button class="btn btn-primary py-2 px-4 d-none d-lg-inline" id="btnPesananSaya"
-                            data-bs-toggle="modal" data-bs-target="#pesananModal">Pesanan
-                            Saya</button>
+                    <button class="btn btn-primary py-2 px-4 d-none d-lg-inline" id=""
+                        data-bs-toggle="modal" data-bs-target="#pesananModal">Pesanan
+                        Saya</button>
                 </div>
             </nav>
 

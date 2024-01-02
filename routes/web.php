@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CustController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PesananController;
 use App\Http\Controllers\RiwayatController;
@@ -25,6 +26,7 @@ Route::get('/', function () {
 });
 Route::resource('menu', MenuController::class);
 Route::resource('cust', CustController::class);
+Route::get('/cust', [CustomerController::class, 'login'])->name('cust.login');
 Route::get('/pesanan', [PesananController::class, 'index']);
 Route::get('/user', [UserController::class, 'index']);
 Route::post('/pesanan/update/{id}', [PesananController::class, 'update'])->name('pesanan');
@@ -37,7 +39,7 @@ Route::resource('riwayat', RiwayatController::class);
 //Route::get('/pesan', [PesananController::class, 'store']);
 Route::post('/cust/simpan', [PesananController::class, 'simpan'])->name('pesanan');
 Route::post('/cust/store', [PesananController::class, 'store'])->name('pesananAsli');
-
+Route::post('/customer/store', [CustomerController::class, 'store'])->name('customer.store');
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -216,7 +216,6 @@
                             <label for="jumlahPesanan">Jumlah Pesanan:</label>
                             <input type="number" class="form-control" id="jumlahPesanan" min="1"
                                 name="jumlah">
-
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary" id="">Tambah Pesanan</button>
