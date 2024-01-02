@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
+use App\Models\pesanSementara;
 use Illuminate\Http\Request;
 
 class CustController extends Controller
@@ -15,8 +16,9 @@ class CustController extends Controller
         $menu = Menu::latest()->paginate(10);
         $foods = Menu::where('kategori', 'makanan')->get();
         $drinks = Menu::where('kategori', 'minuman')->get();
+        $pesan = pesanSementara::latest()->paginate(10);
 
-        return view('cust.index', compact('menu','foods', 'drinks'));
+        return view('cust.index', compact('menu','foods', 'drinks', 'pesan'));
     }
 
     /**

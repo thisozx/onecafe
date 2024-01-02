@@ -31,9 +31,12 @@ Route::post('/pesanan/update/{id}', [PesananController::class, 'update'])->name(
 Route::post('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user');
 Route::get('/menu/destroy/{id}', [MenuController::class, 'destroy'])->name('menu');
 Route::get('/riwayat/destroy/{id}', [RiwayatController::class, 'destroy'])->name('riwayat');
+Route::get('/pesanan/destroy/{id}', [PesananController::class, 'destroy'])->name('pesanan');
 Route::resource('riwayat', RiwayatController::class);
-Route::post('/pesanan/store', [PesananController::class, 'store'])->name('pesanan');
-Route::get('/pesan', [PesananController::class, 'store']);
+//Route::get('/pesanan/store', [PesananController::class, 'store'])->name('pesanan');
+//Route::get('/pesan', [PesananController::class, 'store']);
+Route::post('/cust/simpan', [PesananController::class, 'simpan'])->name('pesanan');
+Route::post('/cust/store', [PesananController::class, 'store'])->name('pesananAsli');
 
 Auth::routes();
 

@@ -35,7 +35,6 @@
 
     <!-- Template Stylesheet -->
     <link href="{{ url('customer/css/style.css') }}" rel="stylesheet">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     @yield('css')
 </head>
 
@@ -70,8 +69,10 @@
                             data-bs-target="#pesananModal"><i class="fa fa-shopping-cart"></i></a>
                     </div>
                     <!-- Menampilkan tombol pesanan di tampilan web biasa -->
-                    <a href="" class="btn btn-primary py-2 px-4 d-none d-lg-inline" id="btnPesananSaya" data-bs-toggle="modal"
-                        data-bs-target="#pesananModal">Pesanan Saya</a>
+
+                        <button class="btn btn-primary py-2 px-4 d-none d-lg-inline" id="btnPesananSaya"
+                            data-bs-toggle="modal" data-bs-target="#pesananModal">Pesanan
+                            Saya</button>
                 </div>
             </nav>
 

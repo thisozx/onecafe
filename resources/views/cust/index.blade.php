@@ -63,8 +63,9 @@
                                                 <span class="text-primary fw-bold">Rp{{ $data->harga }}</span>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <button class="btn btn-primary btn-sm"
-                                                    onclick="tambahKePesanan({{ $data->id }}, '{{ $data->nama }}', {{ $data->harga }})">Tambah</button>
+                                                <a href="#modalTambah{{ $data->id }}" type="button"
+                                                    class="btn btn-primary btn-sm" data-toggle="modal"
+                                                    data-bs-toggle="modal">Tambah</a>
                                             </div>
                                         </div>
                                     </div>
@@ -78,7 +79,7 @@
                             @foreach ($foods as $data)
                                 <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="d-flex align-items-center text-start ms-4">
-                                        <img class="flex-shrink-0 img-fluid rounded"
+                                        <img class="flex-shrink-1 img-fluid rounded"
                                             src="{{ Storage::url('/menu/' . $data->foto) }}" alt=""
                                             style="width: 100px; height: 100px;">
                                         <div class="ms-3">
@@ -88,8 +89,9 @@
                                                 <span class="text-primary fw-bold">Rp{{ $data->harga }}</span>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <button class="btn btn-primary btn-sm"
-                                                    onclick="tambahKePesanan({{ $data->id }}, '{{ $data->nama }}', {{ $data->harga }})">Tambah</button>
+                                                <a href="#modalTambah{{ $data->id }}" type="button"
+                                                    class="btn btn-primary btn-sm" data-toggle="modal"
+                                                    data-bs-toggle="modal">Tambah</a>
                                             </div>
                                         </div>
                                     </div>
@@ -113,8 +115,9 @@
                                                 <span class="text-primary fw-bold">Rp{{ $data->harga }}</span>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <button class="btn btn-primary btn-sm"
-                                                    onclick="tambahKePesanan({{ $data->id }}, '{{ $data->nama }}', {{ $data->harga }})">Tambah</button>
+                                                <a href="#modalTambah{{ $data->id }}" type="button"
+                                                    class="btn btn-primary btn-sm" data-toggle="modal"
+                                                    data-bs-toggle="modal">Tambah</a>
                                             </div>
                                         </div>
                                     </div>
@@ -130,17 +133,19 @@
 
     <!-- Modal -->
     <div class="modal fade" id="pesananModal" tabindex="-1" aria-labelledby="pesananModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pesananModalLabel">Pesanan Saya</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="formPesanan" action="\pesan">
+        <form action="/cust/store" method="POST">
+            @csrf
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="pesananModalLabel">Pesanan Saya</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
                     <div class="modal-body">
-                        @csrf
-                        <label class="text-primary fw-bold" for="noMeja">Nomor Meja:</label>
-                        <input class="form-control mb-2" type="text" id="meja" name="meja" required>
+                        <div class="form-group">
+                            <label class="text-primary fw-bold" for="noMeja">Nomor Meja:</label>
+                            <input class="form-control" type="text" id="meja" name="meja" required>
+                        </div>
                         <table class="table">
                             <thead>
                                 <tr>
@@ -150,146 +155,77 @@
                                     <th scope="col">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="pesananItemsTable"></tbody>
+                            <tbody id="pesananItemsTable">
+                                @php
+                                    $totalSeluruh = 0;
+                                @endphp
+                                @foreach ($pesan as $data)
+                                    <tr>
+                                        <td>{{ $data->menu }}</td>
+                                        <input type="hidden" name="menu" value="{{ $data->menu }}">
+                                        <td>{{ $data->harga }}</td>
+                                        <input type="hidden" name="harga" value="{{ $data->harga }}">
+                                        <td>{{ $data->jumlah }}</td>
+                                        <input type="hidden" name="jumlah" value="{{ $data->jumlah }}">
+                                        <input type="hidden" name="total" value="{{ $data->total }}">
+                                        <td>
+                                            <a href="/pesanan/destroy/{{ $data->id }}" type="button"
+                                                class="btn btn-outline-danger btn-hapus" data-id="{{ $data->id }}">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $totalSeluruh += $data->total;
+                                    @endphp
+                                @endforeach
+                            </tbody>
                         </table>
                     </div>
                     <div class="modal-footer">
                         <div class="d-flex justify-content-between align-items-center w-100">
-                            <span id="totalPesanan" class="fw-bold">Total Pesanan: Rp0</span>
-                            <button id="btnPesanSekarang" class="btn btn-primary">Pesan Sekarang</button>
+                            <span id="totalPesanan" class="fw-bold">Total Pesanan: Rp {{ $totalSeluruh }}</span>
+                            <button type="submit" class="btn btn-primary">Pesan Sekarang</button>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
+
     <!-- Modal Tambah Pesanan -->
-    <div class="modal fade" id="modalTambahPesanan" tabindex="-1" aria-labelledby="modalTambahPesananLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTambahPesananLabel">Tambah Pesanan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    @foreach ($menu as $data)
+        <div class="modal fade" id="modalTambah{{ $data->id }}" tabindex="-1" aria-labelledby="modalTambahLabel"
+            aria-hidden="true">
+            <form action="/cust/simpan" method="post">
+                @csrf
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalTambahLabel">Tambah Pesanan</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <input type="hidden" id="menuId">
+                            <h6 id="menu">{{ $data->nama }}</h6>
+                            <input type="hidden" name="menu" value="{{ $data->nama }}">
+                            <p id="harga">Rp{{ $data->harga }}</p>
+                            <input type="hidden" name="harga" value="{{ $data->harga }}">
+                            <label for="jumlahPesanan">Jumlah Pesanan:</label>
+                            <input type="number" class="form-control" id="jumlahPesanan" min="1"
+                                name="jumlah">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="">Tambah Pesanan</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <input type="hidden" id="menuId">
-                    <h6 id="menuNama"></h6>
-                    <p id="menuHarga"></p>
-                    <label for="jumlahPesanan">Jumlah Pesanan:</label>
-                    <input type="number" class="form-control" id="jumlahPesanan" min="1" value="1">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnTambahPesanan">Tambah Pesanan</button>
-                </div>
-            </div>
+            </form>
         </div>
-    </div>
+    @endforeach
 @endsection
 @section('js')
-    <script>
-        // Objek untuk menyimpan pesanan sementara
-        let pesanan = [];
-
-        function tambahKePesanan(id, nama, harga) {
-            // Tampilkan modal untuk memasukkan jumlah pesanan
-            $('#modalTambahPesanan').modal('show');
-
-            // Set data menu yang dipilih
-            $('#modalTambahPesanan').find('#menuId').val(id);
-            $('#modalTambahPesanan').find('#menuNama').text(nama);
-            $('#modalTambahPesanan').find('#menuHarga').text(`Rp${harga}`);
-
-            // Fungsi yang akan dipanggil saat tombol "Tambah Pesanan" di modal ditekan
-            $('#modalTambahPesanan').find('#btnTambahPesanan').off('click').on('click', function() {
-                let jumlah = parseInt($('#modalTambahPesanan').find('#jumlahPesanan').val());
-
-                if (!isNaN(jumlah) && jumlah > 0) {
-                    // Tambahkan item ke pesanan sementara
-                    let item = {
-                        id: id,
-                        nama: nama,
-                        harga: harga,
-                        jumlah: jumlah
-                    };
-                    pesanan.push(item);
-                    refreshTabelPesanan();
-                    // Sembunyikan modal setelah menambahkan pesanan
-                    $('#modalTambahPesanan').modal('hide');
-                } else {
-                    alert('Jumlah tidak valid.');
-                }
-            });
-        }
-
-        // Fungsi untuk menampilkan modal pesanan
-        function tampilkanModalPesanan() {
-            refreshTabelPesanan();
-            $('#pesananModal').modal('show');
-        }
-
-        function refreshTabelPesanan() {
-            // Perbarui tabel pesanan di modal
-            let tabelPesanan = document.getElementById('pesananItemsTable');
-            let totalPesanan = 0;
-            tabelPesanan.innerHTML = '';
-
-            pesanan.forEach((item, index) => {
-                let subtotal = item.harga * item.jumlah;
-                totalPesanan += subtotal;
-
-                let row = `
-                    <tr>
-                        <td>${item.nama}</td>
-                        <td>Rp${item.harga}</td>
-                        <td>${item.jumlah}</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm" onclick="hapusDariPesanan(${index})"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>`;
-                tabelPesanan.innerHTML += row;
-            });
-
-            // Perbarui total pesanan
-            document.getElementById('totalPesanan').innerText = `Total Pesanan: Rp${totalPesanan}`;
-        }
-
-        function hapusDariPesanan(index) {
-            // Hapus item dari pesanan sementara
-            pesanan.splice(index, 1);
-            refreshTabelPesanan();
-        }
-
-        function pesanSekarang() {
-            // Kirim pesanan ke server atau lakukan tindakan sesuai kebutuhan
-            $.ajax({
-                url: '/pesan',
-                method: 'POST',
-                contentType: 'application/json',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: JSON.stringify({
-                    pesanan: pesanan
-                }),
-                success: function(response) {
-                    console.log('Pesanan berhasil dikirim ke server:', response);
-                    pesanan = [];
-                    refreshTabelPesanan();
-                },
-                error: function(error) {
-                    console.error('Gagal mengirim pesanan ke server:', error);
-                }
-            });
-
-            // Setelah pesanan dikirim atau diproses, bersihkan pesanan
-            pesanan = [];
-            refreshTabelPesanan();
-        }
-        // Event listener untuk button pesan sekarang di modal
-        document.getElementById('btnPesanSekarang').addEventListener('click', pesanSekarang);
-
-        // Event listener untuk button pesanan di header
-        document.getElementById('btnPesananSaya').addEventListener('click', tampilkanModalPesanan);
-    </script>
 @endsection

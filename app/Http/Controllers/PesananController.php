@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pesanan;
 use App\Models\Riwayat;
+use App\Models\pesanSementara;
 use Illuminate\Http\Request;
 
 class PesananController extends Controller
@@ -22,7 +23,6 @@ class PesananController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -30,49 +30,40 @@ class PesananController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input jika diperlukan
-        $request->validate([
-            'meja' => 'required|integer',
-            'pesanan.*.id' => 'required|integer',
-            'pesanan.*.nama' => 'required|string',
-            'pesanan.*.jumlah' => 'required|integer|min:1',
+        // Membuat Pesanan baru
+        $pesanan = Pesanan::create([
+            'meja' => $request->meja,
+            'menu' => $request->menu,
+            'jumlah' => $request->jumlah,
+            'total' => $request->jumlah * $request->harga,
+            'status' => 0,
         ]);
-        // Hitung total pesanan
-        $totalPesanan = 0;
 
-        try {
-            foreach ($request->input('pesanan') as $pesananItem) {
-                $totalPesanan += $pesananItem['harga'] * $pesananItem['jumlah'];
-            }
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Terjadi kesalahan saat memproses data pesanan: ' . $e->getMessage()
-            ], 500);
+        if ($pesanan) {
+            // Jika Pesanan berhasil disimpan, kita dapat menghapus data dari pesanSementara
+            pesanSementara::truncate();
+            return redirect()->back()->with(['success' => 'Data Berhasil Disimpan!']);
+        } else {
+            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
         }
+    }
 
-        // Proses penyimpanan pesanan dan total pesanan
-        $pesanan = new Pesanan;
-        $pesanan->meja = $request->input('meja');
-        $pesanan->total = $totalPesanan;
-        $pesanan->status = 0;
 
-        try {
-            foreach ($request->input('pesanan') as $pesananItem) {
-                $pesanan->create([
-                    'menu' => $pesananItem['nama'],
-                    'jumlah' => $pesananItem['jumlah'],
-                ]);
-            }
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Terjadi kesalahan saat memproses data pesanan: ' . $e->getMessage()
-            ], 500);
+    public function simpan(Request $request)
+    {
+        $pesanan = pesanSementara::create([
+            'menu' => $request->menu,
+            'harga' => $request->harga,
+            'jumlah' => $request->jumlah,
+            'total' => $request->jumlah * $request->harga,
+            'status' => 0,
+        ]);
+
+        if ($pesanan) {
+            return redirect()->back()->with(['success' => 'Data Berhasil Disimpan!']);
+        } else {
+            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
         }
-
-        $pesanan->save();
-
-        // Respond dengan sesuatu, seperti pesan sukses atau data yang disimpan
-        return response()->json(['message' => 'Pesanan berhasil disimpan'], 200);
     }
 
 
@@ -126,8 +117,14 @@ class PesananController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pesanan $pesanan)
+    public function destroy($id)
     {
-        //
+        $pesanan = pesanSementara::find($id);
+        $pesanan->delete();
+        if ($pesanan) {
+            return redirect()->route('cust.index');
+        } else {
+            return redirect()->route('cust.index');
+        }
     }
 }
