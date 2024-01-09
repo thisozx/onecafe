@@ -17,9 +17,9 @@ class CustController extends Controller
         $menu = Menu::latest()->paginate(10);
         $foods = Menu::where('kategori', 'makanan')->get();
         $drinks = Menu::where('kategori', 'minuman')->get();
-        $pesan = pesanSementara::latest()->paginate(10);
-        $customerId = session('customer');
-        $cust = Customer::find($customerId);
+        $customer = session('customer');
+        $cust = Customer::find($customer);
+        $pesan = pesanSementara::where('customer', $customer)->latest()->paginate(10);
 
         return view('cust.index', compact('menu', 'foods', 'drinks', 'pesan', 'cust'));
     }
@@ -38,12 +38,12 @@ class CustController extends Controller
     public function store(Request $request)
     {
         // Simpan data ke basis data
-        Customer::create([
+        $customer = Customer::create([
             'nama' => $request->namaCustomer,
             'nomeja' => $request->nomorMeja,
         ]);
 
-        session(['customer' => $request->id]);
+        session(['customer' => $customer->id]);
 
         // Redirect atau tampilkan pesan sukses sesuai kebutuhan
         return redirect()->route('cust.index')->with('success', 'Silahkan Lakukan Pemesanan!');

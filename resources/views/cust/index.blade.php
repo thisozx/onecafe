@@ -145,8 +145,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label class="text-primary fw-bold" for="noMeja">Nomor Meja:</label>
-                            <input class="form-control" type="text" id="meja" name="meja"
-                                 required>
+                            <input class="form-control" type="text" id="meja" name="meja" value="{{ $cust->nomeja }}" required>
                         </div>
                         <table class="table">
                             <thead>
@@ -170,7 +169,6 @@
                                         <td>{{ $data->jumlah }}</td>
                                         <input type="hidden" name="jumlah" value="{{ $data->jumlah }}">
                                         <input type="hidden" name="total" value="{{ $data->total }}">
-                                        <input type="hidden" name="customer" value="{{ $cust->id }}">
                                         <td>
                                             <a href="/pesanan/destroy/{{ $data->id }}" type="button"
                                                 class="btn btn-outline-danger btn-hapus" data-id="{{ $data->id }}">
@@ -219,6 +217,7 @@
                             <label for="jumlahPesanan">Jumlah Pesanan:</label>
                             <input type="number" class="form-control" id="jumlahPesanan" min="1"
                                 name="jumlah">
+                            <input type="hidden" name="customer" value="{{ $cust->id }}">
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary" id="">Tambah Pesanan</button>

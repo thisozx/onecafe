@@ -42,16 +42,16 @@ class PesananController extends Controller
         if ($pesanan) {
             // Jika Pesanan berhasil disimpan, kita dapat menghapus data dari pesanSementara
             pesanSementara::truncate();
-            return redirect()->back()->with(['success' => 'Data Berhasil Disimpan!']);
+            return redirect()->back()->with(['success' => 'Pesanan Sudah Masuk! Silahkan Menunggu']);
         } else {
-            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
+            return redirect()->back()->with(['error' => 'Yah! Pesanan mu gagal masuk, silahkan hubungi pelayan']);
         }
     }
 
 
     public function simpan(Request $request)
  {
-     $customerId = $request->input('customer'); 
+     $customerId = $request->input('customer');
 
      $pesanan = PesanSementara::create([
          'menu' => $request->menu,
@@ -63,9 +63,9 @@ class PesananController extends Controller
      ]);
 
      if ($pesanan) {
-         return redirect()->back()->with(['success' => 'Data Berhasil Disimpan!']);
+         return redirect()->back()->with(['success' => 'Pesanan Berhasil Disimpan!']);
      } else {
-         return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
+         return redirect()->back()->with(['error' => 'Pesanan Gagal Disimpan! Silahkan hubungi pelayan']);
      }
  }
 
