@@ -50,21 +50,25 @@ class PesananController extends Controller
 
 
     public function simpan(Request $request)
-    {
-        $pesanan = pesanSementara::create([
-            'menu' => $request->menu,
-            'harga' => $request->harga,
-            'jumlah' => $request->jumlah,
-            'total' => $request->jumlah * $request->harga,
-            'status' => 0,
-        ]);
+ {
+     $customerId = $request->input('customer'); 
 
-        if ($pesanan) {
-            return redirect()->back()->with(['success' => 'Data Berhasil Disimpan!']);
-        } else {
-            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
-        }
-    }
+     $pesanan = PesanSementara::create([
+         'menu' => $request->menu,
+         'harga' => $request->harga,
+         'jumlah' => $request->jumlah,
+         'total' => $request->jumlah * $request->harga,
+         'status' => 0,
+         'customer' => $customerId,
+     ]);
+
+     if ($pesanan) {
+         return redirect()->back()->with(['success' => 'Data Berhasil Disimpan!']);
+     } else {
+         return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
+     }
+ }
+
 
 
     /**

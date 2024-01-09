@@ -21,7 +21,7 @@
                         <h4 class="mb-3 text-center">Selamat Datang di OneCafe! 👋</h4>
                         <p class="mb-4 text-center">Silahkan isi nama dan no meja untuk melakukan pemesanan</p>
 
-                        <form action="/customer/store" method="POST">
+                        <form action="/cust" method="POST">
                             @csrf
                             <div class="mb-3">
                                 <label for="namaCustomer" class="form-label">Nama Customer:</label>

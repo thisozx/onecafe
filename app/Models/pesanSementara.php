@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class pesanSementara extends Model
 {
     use HasFactory;
-    protected $fillable = ['menu', 'harga', 'jumlah', 'total' , 'status' ];
+    protected $fillable = ['menu', 'harga', 'jumlah', 'total' , 'status', 'customer' ];
 }

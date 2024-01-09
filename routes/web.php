@@ -22,11 +22,11 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return view('auth/login');
+    return view('cust/login');
 });
 Route::resource('menu', MenuController::class);
 Route::resource('cust', CustController::class);
-Route::get('/cust', [CustomerController::class, 'login'])->name('cust.login');
+Route::get('/cust', [CustController::class, 'store'])->name('cust.store');
 Route::get('/pesanan', [PesananController::class, 'index']);
 Route::get('/user', [UserController::class, 'index']);
 Route::post('/pesanan/update/{id}', [PesananController::class, 'update'])->name('pesanan');
@@ -39,7 +39,7 @@ Route::resource('riwayat', RiwayatController::class);
 //Route::get('/pesan', [PesananController::class, 'store']);
 Route::post('/cust/simpan', [PesananController::class, 'simpan'])->name('pesanan');
 Route::post('/cust/store', [PesananController::class, 'store'])->name('pesananAsli');
-Route::post('/customer/store', [CustomerController::class, 'store'])->name('customer.store');
+Route::get('/cust', [CustController::class, 'index'])->name('cust.index');
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

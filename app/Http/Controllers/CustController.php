@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
+use App\Models\Customer;
 use App\Models\pesanSementara;
 use Illuminate\Http\Request;
 
@@ -17,8 +18,10 @@ class CustController extends Controller
         $foods = Menu::where('kategori', 'makanan')->get();
         $drinks = Menu::where('kategori', 'minuman')->get();
         $pesan = pesanSementara::latest()->paginate(10);
+        $customerId = session('customer');
+        $cust = Customer::find($customerId);
 
-        return view('cust.index', compact('menu','foods', 'drinks', 'pesan'));
+        return view('cust.index', compact('menu', 'foods', 'drinks', 'pesan', 'cust'));
     }
 
     /**
@@ -26,7 +29,7 @@ class CustController extends Controller
      */
     public function create()
     {
-        //
+        return view('cust.login');
     }
 
     /**
@@ -34,7 +37,16 @@ class CustController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Simpan data ke basis data
+        Customer::create([
+            'nama' => $request->namaCustomer,
+            'nomeja' => $request->nomorMeja,
+        ]);
+
+        session(['customer' => $request->id]);
+
+        // Redirect atau tampilkan pesan sukses sesuai kebutuhan
+        return redirect()->route('cust.index')->with('success', 'Silahkan Lakukan Pemesanan!');
     }
 
     /**
